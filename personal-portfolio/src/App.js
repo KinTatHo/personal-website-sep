@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { AboutMe } from "./components/AboutMe";
 import { HomePage } from "./components/PortfolioComponents/HomePage";
 import { Experience } from "./components/PortfolioComponents/Experience";
 import { Projects } from "./components/PortfolioComponents/Projects";
@@ -9,7 +10,7 @@ import { LoadingPage } from "./components/LoadingPage";
 const App = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [currentSection, setCurrentSection] = useState(0);
-  const sections = [HomePage, Experience, Projects, Skills];
+  const sections = [HomePage, AboutMe, Experience, Projects, Skills];
 
   const handleLoadComplete = () => {
     setTimeout(() => setIsLoading(false), 1500);
@@ -59,7 +60,7 @@ const App = () => {
                   currentSection === index ? 'bg-blue-700' : 'hover:bg-blue-700'
                 }`}
               >
-                {['Home', 'Experience', 'Projects', 'Skills'][index]}
+                {['Home', 'About Me', 'Experience', 'Projects', 'Skills'][index]}
               </button>
             ))}
           </nav>

@@ -6,11 +6,11 @@ export const Skills = () => {
     {
       category: "Languages",
       skills: [
-        { name: "Java", level: 90 },
-        { name: "Python", level: 95 },
-        { name: "C/C++", level: 85 },
-        { name: "JavaScript", level: 90 },
-        { name: "HTML/CSS", level: 85 },
+        { name: "Java", level: 63 },
+        { name: "Python", level: 85 },
+        { name: "C/C++", level: 56 },
+        { name: "JavaScript", level: 76 },
+        { name: "HTML/CSS", level: 72 },
       ],
     },
     {
@@ -24,21 +24,20 @@ export const Skills = () => {
       category: "Developer Tools",
       skills: [
         { name: "Vim", level: 70 },
-        { name: "Google Cloud Platform", level: 75 },
+        { name: "Google Cloud Platform", level: 63 },
         { name: "VS Code", level: 90 },
-        { name: "Jupyter Notebook", level: 85 },
+        { name: "Jupyter Notebook", level: 80 },
         { name: "PyCharm", level: 80 },
-        { name: "IntelliJ", level: 85 },
-        { name: "Linux", level: 80 },
+        { name: "IntelliJ", level: 70 },
       ],
     },
     {
       category: "Libraries",
       skills: [
-        { name: "Pandas", level: 85 },
-        { name: "NumPy", level: 80 },
+        { name: "Pandas", level: 62 },
+        { name: "NumPy", level: 60 },
         { name: "PyTorch", level: 75 },
-        { name: "Matplotlib", level: 80 },
+        { name: "Matplotlib", level: 69 },
       ],
     },
   ];
