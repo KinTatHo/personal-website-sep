@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Send, Phone, Mail, MapPin, Star } from "lucide-react";
+import { Send, Phone, Mail, MapPin, Star, X } from "lucide-react";
 import emailjs from "@emailjs/browser";
 
 export const ContactMe = () => {
@@ -11,6 +11,7 @@ export const ContactMe = () => {
   });
   const [formProgress, setFormProgress] = useState(0);
   const [achievements, setAchievements] = useState([]);
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
 
   const form = useRef();
 
@@ -41,8 +42,8 @@ export const ContactMe = () => {
 
     emailjs
       .sendForm(
-        "service_ibgbwfk",
-        "template_wz9acot",
+        "service_zbtg7cn",
+        "template_h1w6vs6",
         form.current,
         "05Ig1ioRQA1Lk7UbI"
       )
@@ -50,8 +51,10 @@ export const ContactMe = () => {
         () => {
           console.log("SUCCESS!");
           setAchievements([...achievements, "Message Sent"]);
+          setShowSuccessPopup(true);
           setFormData({ name: "", email: "", message: "" });
           setFormProgress(0);
+          setTimeout(() => setShowSuccessPopup(false), 3000);
         },
         (error) => {
           console.log("FAILED...", error.text);
@@ -183,6 +186,25 @@ export const ContactMe = () => {
           </motion.div>
         </div>
       </div>
+
+      <AnimatePresence>
+        {showSuccessPopup && (
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 50 }}
+            className="fixed bottom-4 right-4 bg-green-500 text-white p-4 rounded-lg shadow-lg pixel-font"
+          >
+            <div className="flex items-center">
+              <span>Message sent successfully!</span>
+              <X
+                className="ml-2 cursor-pointer"
+                onClick={() => setShowSuccessPopup(false)}
+              />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
