@@ -23,7 +23,7 @@ export const Projects = () => {
     return (
       <div className="bg-gradient-to-br from-blue-600 to-indigo-900 min-h-screen py-16 px-4">
         <div className="container mx-auto">
-          <h2 className="text-4xl font-bold mb-12 text-center text-white">Projects</h2>
+          <h2 className="text-4xl font-bold mb-12 text-center text-white mt-5">Projects</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {projects.map((project, index) => (
               <motion.div
