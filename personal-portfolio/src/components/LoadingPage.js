@@ -78,7 +78,7 @@ export const LoadingPage = ({ onLoadComplete }) => {
         transition={{ delay: 0.5, duration: 0.5 }}
         className="mt-4 text-2xl font-bold text-white"
       >
-        {isFullyPowered ? "System Powered Up!" : "Power Up the System!"}
+        {isFullyPowered ? "System Powered Up!" : "Power Up the System by Clicking It!"}
       </motion.h2>
 
       <motion.div
