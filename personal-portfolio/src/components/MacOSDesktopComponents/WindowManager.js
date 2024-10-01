@@ -6,14 +6,21 @@ import { MailContent } from "./WindowContent/MailContent";
 import { PomodoroTimer } from "./WindowContent/PomodoroTimer";
 import { SpotifyPlayer } from "./WindowContent/SpotifyPlayer";
 
-export const WindowManager = ({ openWindows, closeWindow }) => (
+export const WindowManager = ({
+  openWindows,
+  minimizedWindows,
+  closeWindow,
+  minimizeWindow,
+}) => (
   <AnimatePresence>
     {openWindows.map((window, index) => (
       <Window
         key={window}
         name={window}
         onClose={() => closeWindow(window)}
-        zIndex={index}
+        onMinimize={() => minimizeWindow(window)}
+        zIndex={openWindows.length - index}
+        isMinimized={minimizedWindows.includes(window)}
         content={
           window === "Terminal" ? (
             <TerminalContent />
