@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Activity, Gamepad2, Code, X, ChevronDown } from "lucide-react";
+import { Activity, Gamepad2, Code, X } from "lucide-react";
 import { PixelBackground } from "../background/PixelBackground";
 
 export const Experience = () => {
   const [isFullExperienceOpen, setIsFullExperienceOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState("summary");
+  const topRef = useRef(null);
 
   const overallSummary = [
     "Over 2 years of experience in software engineering and AI development",
@@ -20,6 +20,8 @@ export const Experience = () => {
       title: "Software Engineer",
       company: "Ok to Shop",
       period: "Aug 2024 – Present",
+      summary:
+        "Developed AI-powered chatbot API for nutritional information retrieval.",
       description:
         "Engineered a high-performance AI-powered chatbot API using FastAPI and Python, integrating OpenAI's GPT-3.5 for natural language processing to provide detailed nutritional information for over 100,000 products. Implemented advanced vector search capabilities with FAISS and Sentence Transformers, enabling efficient querying of a large product database for specific nutritional criteria.",
       icon: <Code className="text-blue-500" size={24} />,
@@ -28,6 +30,7 @@ export const Experience = () => {
       title: "Software Engineer",
       company: "MVP Studio",
       period: "Jan 2024 – July 2024",
+      summary: "Built MVPs and optimized UI/UX for mobile applications.",
       description:
         "Developed Minimal Viable Products (MVPs) such as mobile applications, focusing on creating functional, market-ready prototypes. Constructed a dashboard interface and reusable UI components in React using material UI. Boosted screen navigation efficiency by 15% through UI/UX optimizations, enhancing user experience.",
       icon: <Gamepad2 className="text-green-500" size={24} />,
@@ -36,6 +39,7 @@ export const Experience = () => {
       title: "AI Developer Intern",
       company: "Amaris.AI Pte Ltd",
       period: "Dec 2023 – Jan 2024",
+      summary: "Tested and optimized AI models for speech-to-text systems.",
       description:
         "Conducted practical testing of emerging AI models, with an emphasis on their integration into user-focused products, including a speech-to-text system with speaker diarization capabilities. Collaborated with Data Scientists in the implementation of advanced AI frameworks such as Hugging Face Transformers and PyTorch. Enhanced AI model performance and efficiency through optimization techniques such as quantization, reducing model size by 30% and speeding up inference by 25% with minimal impact on accuracy.",
       icon: <Activity className="text-orange-500" size={24} />,
@@ -44,14 +48,24 @@ export const Experience = () => {
       title: "Software Engineer",
       company: "Any Technology Pte Ltd",
       period: "May 2023 – Aug 2023",
+      summary:
+        "Enhanced company website, improving traffic and user engagement.",
       description:
         "Played a key role in maintaining and enhancing the company's website using React, leading to a significant 30% increase in website traffic and user engagement. Handled critical data using encryption, which helped secure a major million-dollar contract deal with an Indonesian bank. Collaborated with the UX team to implement responsive design principles, resulting in a 25% improvement in mobile user retention.",
       icon: <Code className="text-purple-500" size={24} />,
     },
   ];
 
+  const openFullExperience = () => {
+    setIsFullExperienceOpen(true);
+    setTimeout(() => {
+      topRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, 100);
+  };
+
   return (
     <div className="relative bg-gradient-to-br from-blue-800 to-purple-900 min-h-screen py-16 px-4 text-white overflow-hidden">
+      <div ref={topRef} className="absolute top-0 left-0" />
       <div className="absolute inset-0 z-0">
         <PixelBackground />
       </div>
@@ -60,7 +74,6 @@ export const Experience = () => {
           My Career Journey
         </h2>
 
-        {/* Overall Summary Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -79,7 +92,6 @@ export const Experience = () => {
           </ul>
         </motion.div>
 
-        {/* Experience Timeline */}
         <div className="space-y-6">
           {fullExperiences.map((exp, index) => (
             <motion.div
@@ -96,7 +108,7 @@ export const Experience = () => {
                 </h3>
               </div>
               <p className="text-gray-400 mb-2 pixel-font">{exp.period}</p>
-              <p className="text-gray-300 pixel-font">{exp.description}</p>
+              <p className="text-gray-300 pixel-font">{exp.summary}</p>
             </motion.div>
           ))}
         </div>
@@ -105,7 +117,7 @@ export const Experience = () => {
           className="cursor-pointer flex items-center justify-center bg-gradient-to-r from-yellow-400 to-orange-500 p-4 rounded-lg shadow-lg mt-8"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          onClick={() => setIsFullExperienceOpen(true)}
+          onClick={openFullExperience}
         >
           <Gamepad2 className="mr-2" />
           <span className="text-lg font-semibold pixel-font">
@@ -119,7 +131,7 @@ export const Experience = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50"
+              className="fixed inset-0 bg-black bg-opacity-75 flex justify-center p-4 z-50"
             >
               <motion.div
                 initial={{ y: 50, opacity: 0 }}
