@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React from "react";
+import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { fadeIn, slideIn, scaleIn } from "./AboutMeAnimations";
-import { Lock, Unlock, Code, Bike, Mountain } from "lucide-react";
+import { Download, Code, Bike, Mountain } from "lucide-react";
 import { PixelBackground } from "./background/PixelBackground";
 import mountainsImage from "../images/mountains.jpg";
 import resume from "../resume/Ho_Kin_Tat_Resume.pdf";
@@ -12,26 +12,6 @@ export const AboutMe = () => {
     triggerOnce: true,
     threshold: 0.1,
   });
-
-  const [score, setScore] = useState(0);
-  const [level, setLevel] = useState(1);
-  const [showAchievement, setShowAchievement] = useState(false);
-  const [isResumeUnlocked, setIsResumeUnlocked] = useState(false);
-
-  useEffect(() => {
-    if (score > 0 && score % 5 === 0) {
-      setLevel((prevLevel) => prevLevel + 1);
-      setShowAchievement(true);
-      setTimeout(() => setShowAchievement(false), 3000);
-    }
-    if (score >= 20 && !isResumeUnlocked) {
-      setIsResumeUnlocked(true);
-    }
-  }, [score]);
-
-  const incrementScore = () => {
-    setScore((prevScore) => prevScore + 1);
-  };
 
   return (
     <div className="bg-gradient-to-br from-blue-800 to-purple-900 min-h-screen py-16 px-4 text-white">
@@ -44,7 +24,7 @@ export const AboutMe = () => {
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
         >
-          About Me (Level {level})
+          About Me
         </motion.h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -60,29 +40,13 @@ export const AboutMe = () => {
               className="rounded-lg shadow-lg w-full h-auto"
             />
             <motion.a
-              href={isResumeUnlocked ? resume : "#"}
-              download={isResumeUnlocked ? "Ho_Kin_Tat_Resume.pdf" : undefined}
-              className={`absolute bottom-4 right-4 p-2 rounded-full shadow-lg transition-colors duration-300 ${
-                isResumeUnlocked
-                  ? "bg-green-500 hover:bg-green-600"
-                  : "bg-gray-500 cursor-not-allowed"
-              }`}
-              whileHover={isResumeUnlocked ? { scale: 1.1 } : {}}
-              whileTap={isResumeUnlocked ? { scale: 0.9 } : {}}
-              onClick={(e) => {
-                if (!isResumeUnlocked) {
-                  e.preventDefault();
-                  alert("Reach level 5 to unlock the resume!");
-                } else {
-                  incrementScore();
-                }
-              }}
+              href={resume}
+              download="Ho_Kin_Tat_Resume.pdf"
+              className="absolute bottom-4 right-4 p-2 rounded-full shadow-lg transition-colors duration-300 bg-green-500 hover:bg-green-600"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
             >
-              {isResumeUnlocked ? (
-                <Unlock size={24} className="text-white" />
-              ) : (
-                <Lock size={24} className="text-white" />
-              )}
+              <Download size={24} className="text-white" />
             </motion.a>
           </motion.div>
 
@@ -109,7 +73,6 @@ export const AboutMe = () => {
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
                 className="cursor-pointer"
-                onClick={incrementScore}
               >
                 <Code size={40} className="text-blue-400" />
               </motion.div>
@@ -117,7 +80,6 @@ export const AboutMe = () => {
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
                 className="cursor-pointer"
-                onClick={incrementScore}
               >
                 <Bike size={40} className="text-orange-400" />
               </motion.div>
@@ -125,7 +87,6 @@ export const AboutMe = () => {
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
                 className="cursor-pointer"
-                onClick={incrementScore}
               >
                 <Mountain size={40} className="text-green-400" />
               </motion.div>
@@ -146,23 +107,6 @@ export const AboutMe = () => {
             something." —Lauren Conrad
           </blockquote>
         </motion.div>
-      </div>
-
-      <AnimatePresence>
-        {showAchievement && (
-          <motion.div
-            className="fixed top-4 right-4 bg-yellow-400 text-black px-4 py-2 rounded-lg pixel-font"
-            initial={{ opacity: 0, y: -50 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -50 }}
-          >
-            Level Up! You're now Level {level}
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <div className="fixed bottom-4 left-4 bg-blue-500 text-white px-4 py-2 rounded-lg pixel-font">
-        Score: {score}
       </div>
     </div>
   );
