@@ -1,92 +1,113 @@
-import React, { useState } from "react";
-import { AboutMe } from "./components/AboutMe";
-import { ContactMe } from "./components/ContactMe";
-import { HomePage } from "./components/PortfolioComponents/HomePage";
-import { Experience } from "./components/PortfolioComponents/Experience";
-import { MacOSDesktop } from "./components/MacOSDesktopComponents/MacOSDesktop";
-import { Projects } from "./components/PortfolioComponents/Projects";
-import { Skills } from "./components/PortfolioComponents/Skills";
-import { SkillsNetwork } from "./components/PortfolioComponents/SkillsNetwork";
-import { motion, AnimatePresence } from "framer-motion";
-import { LoadingPage } from "./components/LoadingPage";
-import { NavBar } from "./components/NavBar";
+// App.js (Revised)
 
+import React, { useState, useEffect } from 'react';
+// Import routing components
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'; 
+import { motion, AnimatePresence } from 'framer-motion';
+
+// Import your main section/page components
+import { HomePage } from './components/PortfolioComponents/HomePage';
+import { AboutMe } from './components/AboutMe';
+import { Experience } from './components/PortfolioComponents/Experience';
+import { Skills } from './components/PortfolioComponents/Skills';
+import { Projects } from './components/PortfolioComponents/Projects';
+import { SkillsNetwork } from './components/PortfolioComponents/SkillsNetwork';
+import { ContactMe } from './components/ContactMe';
+
+// Import layout and utility components
+import { NavBar } from './components/NavBar'; // Use the modified NavBar below
+import { LoadingPage } from './components/LoadingPage'; // Use the modified LoadingPage
+// Assuming you created ThreeBackground as discussed
+import { ThreeBackground } from './components/background/ThreeBackground'; 
+
+// Main App component
 const App = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [isWebsiteOpen, setIsWebsiteOpen] = useState(false);
-  const [currentSection, setCurrentSection] = useState(0);
 
-  const sections = [
-    HomePage,
-    AboutMe,
-    Experience,
-    Projects,
-    Skills,
-    ContactMe,
-    SkillsNetwork,
-  ];
+  // Simulate initial loading time (adjust as needed)
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 2000); // Example: 2 seconds
+    return () => clearTimeout(timer);
+  }, []);
 
-  const handleLoadComplete = () => {
-    setTimeout(() => setIsLoading(false), 1500);
+  // Component to render the main content after loading
+  const AppContent = () => {
+    const location = useLocation(); // Hook to get current location for animations
+
+    return (
+      <div className="relative min-h-screen"> {/* Ensure background covers screen */}
+        {/* Render background globally */}
+        <ThreeBackground /> 
+        
+        {/* Render NavBar globally */}
+        <NavBar /> 
+
+        {/* Main content area with padding for fixed NavBar */}
+        <main className="relative z-10 pt-20 md:pt-24"> {/* Adjust padding top based on NavBar height */}
+          {/* AnimatePresence handles transitions between routes */}
+          <AnimatePresence mode="wait"> 
+            <Routes location={location} key={location.pathname}>
+              {/* Define routes for each section/page */}
+              <Route path="/" element={
+                  <PageWrapper><HomePage /></PageWrapper>
+              }/>
+              <Route path="/about" element={
+                  <PageWrapper><AboutMe /></PageWrapper>
+              }/>
+              <Route path="/experience" element={
+                   <PageWrapper><Experience /></PageWrapper>
+              }/>
+              <Route path="/skills" element={
+                  <PageWrapper><Skills /></PageWrapper>
+              }/>
+              <Route path="/skills-network" element={
+                  <PageWrapper><SkillsNetwork /></PageWrapper>
+              }/>
+              <Route path="/projects" element={
+                  <PageWrapper><Projects /></PageWrapper>
+              }/>
+              <Route path="/contact" element={
+                  <PageWrapper><ContactMe /></PageWrapper>
+              }/>
+              {/* Optional: Add a 404 Not Found route here */}
+              {/* <Route path="*" element={<NotFoundPage />} /> */}
+            </Routes>
+          </AnimatePresence>
+        </main>
+         {/* Optional: Add a Footer component here */}
+      </div>
+    );
   };
 
-  const handleNavClick = (index) => {
-    setCurrentSection(index);
-  };
+  // Wrapper component for page transition animations
+  const PageWrapper = ({ children }) => (
+      <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -30 }}
+          transition={{ duration: 0.5, ease: "easeInOut" }}
+      >
+          {children}
+      </motion.div>
+  );
 
-  const handleOpenWebsite = () => {
-    setIsWebsiteOpen(true);
-  };
-
-  const handleCloseWebsite = () => {
-    setIsWebsiteOpen(false);
-  };
-
+  // Render LoadingPage or AppContent based on isLoading state
   return (
-    <AnimatePresence mode="wait">
-      {isLoading ? (
-        <motion.div key="loader">
-          <LoadingPage onLoadComplete={handleLoadComplete} />
-        </motion.div>
-      ) : (
-        <MacOSDesktop onOpenWebsite={handleOpenWebsite}>
-          {isWebsiteOpen && (
-            <motion.div
-              key="content"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.5 }}
-              className="fixed inset-0 m-8 bg-gradient-to-br from-blue-600 to-indigo-900 rounded-lg shadow-2xl overflow-hidden flex flex-col"
-            >
-              <div className="bg-gray-800 p-2 flex justify-between items-center">
-                <div className="text-white pixel-font">Kin Tat's Portfolio Adventure</div>
-                <button
-                  onClick={handleCloseWebsite}
-                  className="text-white hover:text-red-500 transition-colors duration-300"
-                >
-                  Close
-                </button>
-              </div>
-              <NavBar currentSection={currentSection} onNavClick={handleNavClick} />
-              <div className="flex-grow overflow-y-auto">
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={currentSection}
-                    initial={{ opacity: 0, y: 50 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -50 }}
-                    transition={{ duration: 0.5 }}
-                  >
-                    {React.createElement(sections[currentSection])}
-                  </motion.div>
-                </AnimatePresence>
-              </div>
-            </motion.div>
-          )}
-        </MacOSDesktop>
-      )}
-    </AnimatePresence>
+    <Router> {/* Wrap everything in BrowserRouter */}
+      {/* Use AnimatePresence for smooth transition between Loading and App */}
+      <AnimatePresence mode="wait">
+        {isLoading ? (
+          <motion.div key="loader" exit={{ opacity: 0 }}>
+            {/* Use the modified LoadingPage */}
+            <LoadingPage onLoadComplete={() => setIsLoading(false)} /> 
+          </motion.div>
+        ) : (
+          <motion.div key="appContent" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <AppContent />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </Router>
   );
 };
 

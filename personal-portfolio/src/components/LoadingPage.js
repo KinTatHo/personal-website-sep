@@ -1,132 +1,110 @@
 import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { HardDrive, Zap, Play } from "lucide-react";
+import { motion } from "framer-motion";
+// Using a different icon, e.g., Loader or Aperture, instead of HardDrive/Zap
+import { Loader, Aperture } from "lucide-react"; 
 
 export const LoadingPage = ({ onLoadComplete }) => {
-  const [power, setPower] = useState(0);
-  const [clicks, setClicks] = useState(0);
-  const [showMessage, setShowMessage] = useState(false);
-  const [isFullyPowered, setIsFullyPowered] = useState(false);
-  const maxPower = 100;
-  const clicksNeeded = 10;
+  const [loadingProgress, setLoadingProgress] = useState(0);
+  const [loadingText, setLoadingText] = useState("Initializing...");
 
   useEffect(() => {
-    if (power >= maxPower && !isFullyPowered) {
-      setIsFullyPowered(true);
-    }
-  }, [power, isFullyPowered]);
+    // Simulate loading progress
+    const interval = setInterval(() => {
+      setLoadingProgress((prev) => {
+        const next = prev + 10;
+        if (next >= 100) {
+          clearInterval(interval);
+          setLoadingText("System Ready!");
+          // Trigger completion after a short delay
+          setTimeout(onLoadComplete, 1000); 
+          return 100;
+        }
+        // Update loading text based on progress
+        if (next > 70) setLoadingText("Finalizing...");
+        else if (next > 30) setLoadingText("Loading Assets...");
+        return next;
+      });
+    }, 300); // Adjust interval timing as needed
 
-  const handleClick = () => {
-    if (clicks < clicksNeeded) {
-      setClicks((prev) => prev + 1);
-      setPower((prev) => Math.min(prev + 10, maxPower));
-      setShowMessage(true);
-      setTimeout(() => setShowMessage(false), 500);
-    }
-  };
+    return () => clearInterval(interval); // Cleanup interval on unmount
+  }, [onLoadComplete]);
 
-  const handleStart = () => {
-    onLoadComplete();
-  };
 
   return (
-    <div className="h-screen w-screen flex flex-col items-center justify-center bg-gray-900 relative overflow-hidden">
-      {/* Animated background */}
-      <div className="absolute inset-0">
-        {[...Array(20)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute bg-blue-500 rounded-full opacity-20"
-            initial={{ x: Math.random() * 100 + "%", y: "-10%", scale: 0 }}
-            animate={{ y: "110%", scale: Math.random() * 2 + 1 }}
-            transition={{
-              duration: Math.random() * 2 + 3,
-              repeat: Infinity,
-              repeatType: "loop",
-            }}
-            style={{
-              left: `${Math.random() * 100}%`,
-              width: "4px",
-              height: "4px",
-            }}
-          />
-        ))}
-      </div>
+    <div className="h-screen w-screen flex flex-col items-center justify-center bg-gradient-to-br from-gray-900 to-blue-900 relative text-white">
+      {/* Using a subtle background animation */}
+      <div className="absolute inset-0 z-0">
+         {/* Example: Simple animated gradient or keep the particle effect */}
+         {[...Array(15)].map((_, i) => (
+           <motion.div
+             key={i}
+             className="absolute bg-blue-500 rounded-full opacity-10" // Reduced opacity
+             initial={{ 
+                x: `${Math.random() * 100}%`, 
+                y: `${Math.random() * 100}%`, 
+                scale: Math.random() * 0.5 + 0.1 
+             }}
+             animate={{ 
+                x: `${Math.random() * 100}%`, 
+                y: `${Math.random() * 100}%`, 
+             }}
+             transition={{
+               duration: Math.random() * 10 + 10, // Slower animation
+               repeat: Infinity,
+               repeatType: "mirror", // Smoother back and forth
+               ease: "easeInOut"
+             }}
+             style={{
+               width: `${Math.random() * 10 + 5}px`, // Slightly larger dots
+               height: `${Math.random() * 10 + 5}px`,
+             }}
+           />
+         ))}
+       </div>
 
+      {/* Loading Icon Animation */}
       <motion.div
-        className="relative cursor-pointer"
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-        onClick={handleClick}
+        className="relative mb-6" // Added margin bottom
+        animate={{ rotate: 360 }}
+        transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
       >
-        <HardDrive size={100} className="text-blue-500" />
-        <motion.div
-          className="absolute inset-0 bg-blue-300 rounded-full"
-          initial={{ scale: 0 }}
-          animate={{ scale: power / maxPower }}
-          transition={{ type: "spring", stiffness: 300, damping: 15 }}
-        />
-        <Zap
-          size={30}
-          className="text-yellow-400 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-        />
+        {/* Using Aperture or Loader icon */}
+        <Aperture size={80} className="text-blue-400" /> 
+        {/* <Loader size={80} className="text-blue-400" /> */}
       </motion.div>
 
+      {/* Loading Text */}
       <motion.h2
+        key={loadingText} // Add key to trigger animation on text change
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.5, duration: 0.5 }}
-        className="mt-4 text-2xl font-bold text-white"
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.3 }}
+        className="mt-4 text-2xl font-bold text-white pixel-font" // Kept pixel-font
       >
-        {isFullyPowered ? "System Powered Up!" : "Power Up the System by Clicking It!"}
+        {loadingText}
       </motion.h2>
 
+      {/* Progress Bar */}
       <motion.div
-        className="mt-4 w-64 h-4 bg-gray-700 rounded-full overflow-hidden"
+        className="mt-4 w-64 h-3 bg-gray-700 rounded-full" // Made bar slightly thicker
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.7, duration: 0.5 }}
+        transition={{ delay: 0.3, duration: 0.5 }}
       >
         <motion.div
           className="h-full bg-blue-500"
           initial={{ width: 0 }}
-          animate={{ width: `${(power / maxPower) * 100}%` }}
-          transition={{ type: "spring", stiffness: 100, damping: 15 }}
+          animate={{ width: `${loadingProgress}%` }}
+          transition={{ duration: 0.3 }} // Match interval speed roughly
         />
       </motion.div>
 
-      <p className="mt-2 text-white">
-        Power: {power}% | Clicks: {clicks}/{clicksNeeded}
-      </p>
+      <p className="mt-2 text-sm text-blue-300 pixel-font">{loadingProgress}%</p>
 
-      <AnimatePresence>
-        {showMessage && (
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="mt-4 text-yellow-400 font-bold"
-          >
-            +10 Power!
-          </motion.p>
-        )}
-      </AnimatePresence>
+      {/* Removed the click interaction and related elements */}
+      {/* Removed the "Start" button; onLoadComplete is triggered automatically */}
 
-      <AnimatePresence>
-        {isFullyPowered && (
-          <motion.button
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="mt-8 px-6 py-3 bg-green-500 text-white rounded-full font-bold flex items-center"
-            onClick={handleStart}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            Start <Play size={20} className="ml-2" />
-          </motion.button>
-        )}
-      </AnimatePresence>
     </div>
   );
 };

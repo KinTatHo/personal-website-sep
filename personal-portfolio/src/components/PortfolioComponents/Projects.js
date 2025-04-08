@@ -34,7 +34,7 @@ export const Projects = () => {
   ];
 
   return (
-    <div className="relative bg-gradient-to-br from-blue-800 to-purple-900 min-h-screen py-16 px-4 overflow-hidden">
+    <div className="relative bg-gradient-to-br from-blue-800 to-purple-900 min-h-screen py-16 px-4">
       {/* PixelBackground remains for visual style */}
       <PixelBackground />
       <div className="container mx-auto relative z-10">

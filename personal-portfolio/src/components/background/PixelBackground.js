@@ -2,7 +2,7 @@ import React from 'react';
 
 export const PixelBackground = () => {
   return (
-    <div className="absolute inset-0 overflow-hidden">
+    <div className="absolute inset-0">
       {[...Array(50)].map((_, i) => (
         <div
           key={i}

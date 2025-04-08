@@ -157,7 +157,7 @@ export const SkillsNetwork = () => {
       
       <motion.div
         // Use calculated dimensions, added border for definition
-        className="w-full relative border border-gray-700 rounded-lg overflow-hidden" 
+        className="w-full relative border border-gray-700 rounded-lg" 
         style={{ height: `${dimensions.height}px`, width: `${dimensions.width}px` }}
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
