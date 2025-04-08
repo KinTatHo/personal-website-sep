@@ -1,12 +1,14 @@
 import React, { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Activity, Gamepad2, Code, X } from "lucide-react";
+// Changed Gamepad2 to ChevronsDown, added PlusCircle as an alternative option
+import { Activity, Code, ChevronsDown, PlusCircle, X } from "lucide-react"; 
 import { PixelBackground } from "../background/PixelBackground";
 
 export const Experience = () => {
   const [isFullExperienceOpen, setIsFullExperienceOpen] = useState(false);
-  const topRef = useRef(null);
+  const topRef = useRef(null); // For scrolling to top when modal opens
 
+  // Experience summary - kept as is, seems professional
   const overallSummary = [
     "Over 2 years of experience in software engineering and AI development",
     "Expertise in building high-performance APIs and implementing advanced search capabilities",
@@ -15,6 +17,7 @@ export const Experience = () => {
     "Proven track record of improving website performance and user engagement",
   ];
 
+  // Detailed experiences - kept as is
   const fullExperiences = [
     {
       title: "Software Engineer",
@@ -33,7 +36,8 @@ export const Experience = () => {
       summary: "Built MVPs and optimized UI/UX for mobile applications.",
       description:
         "Developed Minimal Viable Products (MVPs) such as mobile applications, focusing on creating functional, market-ready prototypes. Constructed a dashboard interface and reusable UI components in React using material UI. Boosted screen navigation efficiency by 15% through UI/UX optimizations, enhancing user experience.",
-      icon: <Gamepad2 className="text-green-500" size={24} />,
+       // Changed icon to Activity for variety, could use Briefcase too
+      icon: <Activity className="text-green-500" size={24} />, 
     },
     {
       title: "AI Developer Intern",
@@ -58,22 +62,26 @@ export const Experience = () => {
 
   const openFullExperience = () => {
     setIsFullExperienceOpen(true);
+    // Scroll to top smoothly when modal opens
     setTimeout(() => {
       topRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, 100);
+    }, 100); 
   };
 
   return (
     <div className="relative bg-gradient-to-br from-blue-800 to-purple-900 min-h-screen py-16 px-4 text-white overflow-hidden">
-      <div ref={topRef} className="absolute top-0 left-0" />
+      {/* Empty div at the top to scroll to */}
+      <div ref={topRef} className="absolute top-0 left-0" /> 
       <div className="absolute inset-0 z-0">
         <PixelBackground />
       </div>
       <div className="container mx-auto relative z-10">
+        {/* Updated title */}
         <h2 className="text-4xl font-bold mb-12 text-center text-white pixel-font">
-          My Career Journey
+          Professional Experience
         </h2>
 
+        {/* Experience Overview Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -92,6 +100,7 @@ export const Experience = () => {
           </ul>
         </motion.div>
 
+        {/* Individual Experience Summaries */}
         <div className="space-y-6">
           {fullExperiences.map((exp, index) => (
             <motion.div
@@ -99,11 +108,12 @@ export const Experience = () => {
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="bg-gray-900 bg-opacity-80 p-6 rounded-lg shadow-neon transition-all duration-300"
+              // Added hover effect similar to Projects component
+              className="bg-gray-900 bg-opacity-80 p-6 rounded-lg shadow-neon transition-all duration-300 hover:shadow-lg hover:bg-opacity-90" 
             >
               <div className="flex items-center mb-4">
                 {exp.icon}
-                <h3 className="text-xl font-semibold ml-2 text-blue-400 pixel-font">
+                <h3 className="text-xl font-semibold ml-3 text-blue-400 pixel-font"> {/* Added ml-3 */}
                   {exp.title} @ {exp.company}
                 </h3>
               </div>
@@ -113,38 +123,47 @@ export const Experience = () => {
           ))}
         </div>
 
-        <motion.div
-          className="cursor-pointer flex items-center justify-center bg-gradient-to-r from-yellow-400 to-orange-500 p-4 rounded-lg shadow-lg mt-8"
-          whileHover={{ scale: 1.05 }}
+        {/* Button to open detailed view */}
+        <motion.button // Changed from div to button for semantics
+          className="cursor-pointer flex items-center justify-center bg-gradient-to-r from-blue-500 to-teal-500 p-4 rounded-lg shadow-lg mt-10 w-full md:w-auto md:mx-auto hover:from-blue-600 hover:to-teal-600" // Changed color, margin, width
+          whileHover={{ scale: 1.05, boxShadow: "0 0 15px rgba(0, 180, 180, 0.5)"}} // Adjusted hover effect
           whileTap={{ scale: 0.95 }}
           onClick={openFullExperience}
         >
-          <Gamepad2 className="mr-2" />
+          {/* Changed icon */}
+          <ChevronsDown className="mr-2" size={20} /> 
+          {/* <PlusCircle className="mr-2" size={20} /> Use this icon as an alternative */}
+          {/* Updated button text */}
           <span className="text-lg font-semibold pixel-font">
-            Unlock Detailed Achievements
+            View Detailed Experience
           </span>
-        </motion.div>
+        </motion.button>
 
+        {/* Modal for Full Experience Details */}
         <AnimatePresence>
           {isFullExperienceOpen && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black bg-opacity-75 flex justify-center p-4 z-50"
+              // Added backdrop blur
+              className="fixed inset-0 bg-black bg-opacity-75 backdrop-blur-sm flex justify-center items-center p-4 z-50" 
             >
               <motion.div
                 initial={{ y: 50, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: 50, opacity: 0 }}
-                className="bg-gray-900 rounded-lg shadow-xl p-6 w-full max-w-4xl max-h-[90vh] overflow-auto relative"
+                // Added max width and height control
+                className="bg-gray-900 rounded-lg shadow-xl p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto relative" 
               >
-                <div className="flex justify-between items-center mb-4">
+                <div className="flex justify-between items-center mb-6 pb-4 border-b border-gray-700"> {/* Added padding and border */}
+                  {/* Updated modal title */}
                   <h3 className="text-2xl font-bold text-blue-400 pixel-font">
-                    Detailed Career Achievements
+                    Detailed Experience
                   </h3>
-                  <X
+                  <X // Close button
                     className="cursor-pointer text-gray-400 hover:text-gray-200"
+                    size={28} // Made icon slightly larger
                     onClick={() => setIsFullExperienceOpen(false)}
                   />
                 </div>
@@ -154,22 +173,29 @@ export const Experience = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.1 }}
-                    className="mb-6 border-b border-gray-700 pb-4 last:border-b-0"
+                    className="mb-6 border-b border-gray-800 pb-6 last:border-b-0 last:pb-0 last:mb-0" // Adjusted borders/padding
                   >
                     <div className="flex items-center mb-2">
                       {exp.icon}
-                      <h4 className="text-xl font-semibold ml-2 text-blue-400 pixel-font">
+                      <h4 className="text-xl font-semibold ml-3 text-blue-400 pixel-font"> {/* Added ml-3 */}
                         {exp.title} @ {exp.company}
                       </h4>
                     </div>
-                    <p className="text-gray-400 mb-2 pixel-font">
+                    <p className="text-gray-400 mb-3 pixel-font"> {/* Increased bottom margin */}
                       {exp.period}
                     </p>
-                    <p className="text-gray-300 pixel-font">
+                    <p className="text-gray-300 pixel-font leading-relaxed"> {/* Added leading-relaxed */}
                       {exp.description}
                     </p>
                   </motion.div>
                 ))}
+                 {/* Added explicit close button at the bottom */}
+                 <button 
+                    onClick={() => setIsFullExperienceOpen(false)} 
+                    className="mt-6 bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded-full font-semibold pixel-font block mx-auto"
+                  >
+                    Close
+                  </button>
               </motion.div>
             </motion.div>
           )}
