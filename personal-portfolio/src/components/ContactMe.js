@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Send, Phone, Mail, MapPin, Star, X } from "lucide-react";
+// Removed Star icon as achievements are removed
+import { Send, Phone, Mail, MapPin, X } from "lucide-react"; 
 import emailjs from "@emailjs/browser";
 
 export const ContactMe = () => {
@@ -10,77 +11,84 @@ export const ContactMe = () => {
     message: "",
   });
   const [formProgress, setFormProgress] = useState(0);
-  const [achievements, setAchievements] = useState([]);
+  // Removed achievements state
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
 
   const form = useRef();
 
   const handleChange = (e) => {
-    const newFormData = { ...formData, [e.target.name]: e.target.value };
+    const { name, value } = e.target;
+    const newFormData = { ...formData, [name]: value };
     setFormData(newFormData);
-    updateProgress(newFormData);
+    updateProgress(newFormData); // Update progress bar based on filled fields
   };
 
+  // Simplified progress update: just calculates percentage based on filled fields
   const updateProgress = (data) => {
     let progress = 0;
-    if (data.name) progress += 33;
-    if (data.email) progress += 33;
-    if (data.message) progress += 34;
-    setFormProgress(progress);
-
-    // Check for achievements
-    if (progress === 100 && !achievements.includes("Form Completed")) {
-      setAchievements([...achievements, "Form Completed"]);
-    }
-    if (data.message.length > 100 && !achievements.includes("Long Message")) {
-      setAchievements([...achievements, "Long Message"]);
-    }
+    const totalFields = 3;
+    if (data.name.trim()) progress++;
+    if (data.email.trim()) progress++; // Basic check for non-empty email
+    if (data.message.trim()) progress++;
+    
+    setFormProgress(Math.round((progress / totalFields) * 100));
+    
+    // Removed achievement checking logic
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    // Optional: Add more robust form validation here if needed
+
     emailjs
       .sendForm(
-        "service_zbtg7cn",
-        "template_h1w6vs6",
+        "service_zbtg7cn", // Replace with your EmailJS service ID
+        "template_h1w6vs6", // Replace with your EmailJS template ID
         form.current,
-        "05Ig1ioRQA1Lk7UbI"
+        "05Ig1ioRQA1Lk7UbI" // Replace with your EmailJS public key
       )
       .then(
         () => {
           console.log("SUCCESS!");
-          setAchievements([...achievements, "Message Sent"]);
+          // Removed achievement setting
           setShowSuccessPopup(true);
+          // Reset form after successful submission
           setFormData({ name: "", email: "", message: "" });
-          setFormProgress(0);
-          setTimeout(() => setShowSuccessPopup(false), 3000);
+          setFormProgress(0); 
+          // Hide popup after 3 seconds
+          setTimeout(() => setShowSuccessPopup(false), 3000); 
         },
         (error) => {
           console.log("FAILED...", error.text);
+          // Optional: Show an error message to the user here
         }
       );
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-600 to-indigo-900 text-white p-8">
+    // Using a slightly different gradient for variety, adjust as needed
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-800 to-purple-900 text-white p-8"> 
       <div className="max-w-4xl w-full mx-auto">
-        <h2 className="text-4xl font-bold mb-8 text-center mt-5 pixel-font">
-          Contact Quest
+        {/* Updated Title */}
+        <h2 className="text-4xl font-bold mb-10 text-center mt-5 pixel-font"> 
+          Get In Touch
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12"> {/* Increased gap */}
+          {/* Form Section */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <h3 className="text-2xl font-semibold mb-4 pixel-font">
-              Complete Your Mission
+            {/* Updated Subtitle */}
+            <h3 className="text-2xl font-semibold mb-6 pixel-font"> 
+              Send Me a Message
             </h3>
-            <form ref={form} onSubmit={handleSubmit} className="space-y-4">
+            <form ref={form} onSubmit={handleSubmit} className="space-y-5"> {/* Increased spacing */}
               <div>
-                <label htmlFor="name" className="block mb-1 pixel-font">
+                <label htmlFor="name" className="block mb-2 pixel-font text-sm"> {/* Adjusted margin and size */}
                   Name
                 </label>
                 <input
@@ -90,12 +98,13 @@ export const ContactMe = () => {
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  className="w-full p-2 rounded bg-blue-700 text-white placeholder-blue-300 pixel-font"
+                  // Adjusted input styling
+                  className="w-full p-3 rounded bg-indigo-700 text-white placeholder-indigo-300 pixel-font border border-transparent focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400 transition" 
                   placeholder="Your Name"
                 />
               </div>
               <div>
-                <label htmlFor="email" className="block mb-1 pixel-font">
+                <label htmlFor="email" className="block mb-2 pixel-font text-sm">
                   Email
                 </label>
                 <input
@@ -105,12 +114,12 @@ export const ContactMe = () => {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="w-full p-2 rounded bg-blue-700 text-white placeholder-blue-300 pixel-font"
-                  placeholder="your@email.com"
+                  className="w-full p-3 rounded bg-indigo-700 text-white placeholder-indigo-300 pixel-font border border-transparent focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+                  placeholder="your.email@example.com" // Updated placeholder
                 />
               </div>
               <div>
-                <label htmlFor="message" className="block mb-1 pixel-font">
+                <label htmlFor="message" className="block mb-2 pixel-font text-sm">
                   Message
                 </label>
                 <textarea
@@ -119,26 +128,32 @@ export const ContactMe = () => {
                   value={formData.message}
                   onChange={handleChange}
                   required
-                  rows="4"
-                  className="w-full p-2 rounded bg-blue-700 text-white placeholder-blue-300 pixel-font"
+                  rows="5" // Slightly taller textarea
+                  className="w-full p-3 rounded bg-indigo-700 text-white placeholder-indigo-300 pixel-font border border-transparent focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
                   placeholder="Your message here..."
                 ></textarea>
               </div>
-              <div className="mb-4">
-                <div className="w-full bg-blue-900 rounded-full h-2.5">
-                  <div
+              {/* Progress Bar */}
+              <div className="pt-2"> {/* Added padding top */}
+                <div className="w-full bg-indigo-900 rounded-full h-2.5">
+                  <motion.div // Added animation to progress bar fill
                     className="bg-blue-500 h-2.5 rounded-full"
-                    style={{ width: `${formProgress}%` }}
-                  ></div>
+                    initial={{ width: 0 }}
+                    animate={{ width: `${formProgress}%` }}
+                    transition={{ duration: 0.3 }}
+                  />
                 </div>
-                <p className="text-sm mt-1 pixel-font">
-                  Mission Progress: {formProgress}%
+                {/* Updated Progress Text */}
+                <p className="text-sm mt-2 pixel-font text-indigo-300"> 
+                  Completion Progress: {formProgress}%
                 </p>
               </div>
+              {/* Submit Button */}
               <motion.button
                 type="submit"
-                className="bg-white text-blue-600 px-6 py-2 rounded-full font-semibold flex items-center justify-center w-full md:w-auto pixel-font"
-                whileHover={{ scale: 1.05 }}
+                 // Adjusted button styling
+                className="bg-gradient-to-r from-blue-500 to-teal-500 text-white px-8 py-3 rounded-full font-semibold flex items-center justify-center w-full md:w-auto pixel-font shadow-lg hover:from-blue-600 hover:to-teal-600"
+                whileHover={{ scale: 1.05, boxShadow: "0 0 15px rgba(0, 180, 180, 0.5)" }}
                 whileTap={{ scale: 0.95 }}
               >
                 Send Message <Send className="ml-2" size={18} />
@@ -146,62 +161,51 @@ export const ContactMe = () => {
             </form>
           </motion.div>
 
+          {/* Contact Info Section */}
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="space-y-6"
+            className="space-y-6 pt-10 md:pt-0" // Added padding top for mobile
           >
-            <h3 className="text-2xl font-semibold mb-4 pixel-font">
+            <h3 className="text-2xl font-semibold mb-6 pixel-font"> 
               Contact Information
             </h3>
-            <div className="flex items-center">
-              <Phone className="mr-4" size={24} />
-              <span className="pixel-font">+65 92232010</span>
+            {/* Kept contact info as is, looks professional */}
+            <div className="flex items-center group"> {/* Added group for hover effects */}
+              <Phone className="mr-4 text-blue-400 group-hover:text-blue-300 transition" size={24} />
+              <span className="pixel-font group-hover:text-gray-200 transition">+65 92232010</span>
             </div>
-            <div className="flex items-center">
-              <Mail className="mr-4" size={24} />
-              <span className="pixel-font">kintath@gmail.com</span>
+            <div className="flex items-center group">
+              <Mail className="mr-4 text-blue-400 group-hover:text-blue-300 transition" size={24} />
+              <span className="pixel-font group-hover:text-gray-200 transition">kintath@gmail.com</span>
             </div>
-            <div className="flex items-center">
-              <MapPin className="mr-4" size={24} />
-              <span className="pixel-font">Singapore</span>
+            <div className="flex items-center group">
+              <MapPin className="mr-4 text-blue-400 group-hover:text-blue-300 transition" size={24} />
+              <span className="pixel-font group-hover:text-gray-200 transition">Singapore</span>
             </div>
-            <div className="mt-8">
-              <h4 className="text-xl font-semibold mb-2 pixel-font">
-                Achievements
-              </h4>
-              <div className="flex flex-wrap gap-2">
-                {achievements.map((achievement, index) => (
-                  <div
-                    key={index}
-                    className="bg-yellow-500 text-black px-3 py-1 rounded-full flex items-center pixel-font"
-                  >
-                    <Star size={16} className="mr-1" />
-                    {achievement}
-                  </div>
-                ))}
-              </div>
-            </div>
+            
+            {/* Removed Achievements section */}
+            
           </motion.div>
         </div>
       </div>
 
+      {/* Success Popup - Kept functionality, adjusted styling */}
       <AnimatePresence>
         {showSuccessPopup && (
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 50 }}
-            className="fixed bottom-4 right-4 bg-green-500 text-white p-4 rounded-lg shadow-lg pixel-font"
+            exit={{ opacity: 0, y: -50 }} // Changed exit animation
+            className="fixed bottom-4 right-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white p-4 rounded-lg shadow-xl pixel-font flex items-center" // Enhanced styling
           >
-            <div className="flex items-center">
-              <span>Message sent successfully!</span>
-              <X
-                className="ml-2 cursor-pointer"
-                onClick={() => setShowSuccessPopup(false)}
-              />
-            </div>
+            <span className="mr-3">Message sent successfully!</span> {/* Added margin */}
+            <X
+              className="cursor-pointer hover:text-gray-200 transition" // Added hover effect
+              onClick={() => setShowSuccessPopup(false)}
+              size={20} // Adjusted size
+            />
           </motion.div>
         )}
       </AnimatePresence>
